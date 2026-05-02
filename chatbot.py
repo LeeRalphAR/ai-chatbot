@@ -1,10 +1,16 @@
 import os
 from groq import Groq
-from dotenv import load_dotenv
 
-load_dotenv()
+# Manually read .env file
+env_path = os.path.join(os.path.dirname(__file__), '.env')
+with open(env_path) as f:
+    for line in f:
+        line = line.strip()
+        if line and not line.startswith('#'):
+            key, value = line.split('=', 1)
+            os.environ[key.strip()] = value.strip()
 
-client = Groq(api_key="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")
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def get_response(messages: list) -> str:
     response = client.chat.completions.create(
